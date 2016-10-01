@@ -3,8 +3,6 @@ package com.pcb.data
 import akka.actor.{Actor, ActorLogging}
 import akka.pattern.pipe
 import com.pcb.messages.{CreateIndustry, DeleteIndustry}
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration.Duration
 import slick.driver.H2Driver.api._
 
 class Industry extends Actor with ActorLogging {

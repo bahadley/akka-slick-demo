@@ -20,19 +20,25 @@ class IndustryClientTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   Thread.sleep(2000)
 
   "An Industry Actor" should "create an Industry correctly" in {
+
     val future: Future[Int] = ask(
       indRef, 
       CreateIndustry("AM", "Aerospace & Defense", "BM")
     ).mapTo[Int]
+
     Await.result(future, 1 second) should be (1)  // Number of tuples inserted.
+
   } 
 
   "An Industry Actor" should "delete an Industry correctly" in {
+
     val future: Future[Int] = ask(
       indRef, 
       DeleteIndustry("AM")
     ).mapTo[Int]
+
     Await.result(future, 1 second) should be (1)  // Number of tuples deleted.
+
   } 
 
   override def afterAll() {
