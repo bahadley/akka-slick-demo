@@ -15,12 +15,31 @@ class Industry extends Actor with ActorLogging {
   def delete(i: DeleteIndustry): DBIO[Int] =
       sqlu"delete from industry where in_id = ${i.in_id}"
 
-  val db = Database.forConfig("tpcdi")
+  var db = None : Option[Database]
+
+  override def preStart(): Unit = {
+    db = Some(Database.forConfig("tpcdi"))
+    super.preStart()
+  }
 
   def receive = {
     case msg: CreateIndustry =>
-      pipe(db.run(insert(msg))) to sender()
+      db match {
+        case None => log.error("Invalid database reference")
+        case Some(db) => pipe(db.run(insert(msg))) to sender()
+      }
     case msg: DeleteIndustry =>
-      pipe(db.run(delete(msg))) to sender()
+      db match {
+        case None => log.error("Invalid database reference")
+        case Some(db) => pipe(db.run(delete(msg))) to sender()
+      }
+  }
+
+  override def postStop(): Unit = {
+    db match {
+      case None => log.error("Invalid database reference")
+      case Some(db) => db.close 
+    }
+    super.postStop()
   }
 }
