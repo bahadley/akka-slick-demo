@@ -1,12 +1,9 @@
 package com.pcb
 
-
 import akka.actor.{ActorSystem, Props}
-
-import com.pcb.model._
-
+import com.pcb.messages.AddIndustry
+import com.pcb.model.Industry
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
-
 
 class IndustryClientTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
@@ -14,7 +11,7 @@ class IndustryClientTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   val indRef = system.actorOf(Props[Industry])
 
   "An IndustryClient" should "add an Industry correctly" in {
-    indRef ! Add("AM", "Aerospace & Defense", "BM")
+    indRef ! AddIndustry("AM", "Aerospace & Defense", "BM")
     Thread.sleep(2000)
   } 
 
