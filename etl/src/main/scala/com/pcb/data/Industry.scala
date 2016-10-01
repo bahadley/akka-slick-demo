@@ -1,12 +1,15 @@
-package com.pcb.model 
+package com.pcb.data 
 
 import akka.actor.{Actor, ActorLogging}
+import akka.pattern.pipe
 import com.pcb.messages.{CreateIndustry, DeleteIndustry}
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import slick.driver.H2Driver.api._
 
 class Industry extends Actor with ActorLogging {
+
+  import scala.concurrent.ExecutionContext.Implicits.global
 
   def insert(i: CreateIndustry): DBIO[Int] =
       sqlu"insert into industry values (${i.in_id}, ${i.in_name}, ${i.in_sc_id})"
@@ -18,14 +21,8 @@ class Industry extends Actor with ActorLogging {
 
   def receive = {
     case msg: CreateIndustry =>
-      val f: Future[_] = {
-        db.run(insert(msg))
-      }
-      Await.result(f, Duration.Inf)
+      pipe(db.run(insert(msg))) to sender()
     case msg: DeleteIndustry =>
-      val f: Future[_] = {
-        db.run(delete(msg))
-      }
-      Await.result(f, Duration.Inf)
+      pipe(db.run(delete(msg))) to sender()
   }
 }

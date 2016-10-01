@@ -1,4 +1,4 @@
-name := "pcb"
+name := "pcb-etl"
 
 version := "0.0.1"
 
