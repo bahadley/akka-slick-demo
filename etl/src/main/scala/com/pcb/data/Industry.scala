@@ -2,7 +2,7 @@ package com.pcb.data
 
 import akka.actor.{Actor, ActorLogging}
 import akka.pattern.pipe
-import com.pcb.messages.{CreateIndustry, DeleteIndustry}
+import com.pcb.messages.{CountIndustry, CreateIndustry, DeleteIndustry}
 import slick.driver.H2Driver.api._
 
 class Industry extends Actor with ActorLogging {
@@ -10,10 +10,13 @@ class Industry extends Actor with ActorLogging {
   import scala.concurrent.ExecutionContext.Implicits.global
 
   def insert(i: CreateIndustry): DBIO[Int] =
-      sqlu"insert into industry values (${i.in_id}, ${i.in_name}, ${i.in_sc_id})"
+    sqlu"insert into industry values (${i.in_id}, ${i.in_name}, ${i.in_sc_id})"
 
   def delete(i: DeleteIndustry): DBIO[Int] =
-      sqlu"delete from industry where in_id = ${i.in_id}"
+    sqlu"delete from industry where in_id = ${i.in_id}"
+
+  def count(i: CountIndustry): DBIO[Option[Int]] =
+    sql"select count(*) from industry where in_id = ${i.in_id}".as[Option[Int]].head
 
   var db = None : Option[Database]
 
@@ -32,6 +35,11 @@ class Industry extends Actor with ActorLogging {
       db match {
         case None => log.error("Invalid database reference")
         case Some(db) => pipe(db.run(delete(msg))) to sender()
+      }
+    case msg: CountIndustry =>
+      db match {
+        case None => log.error("Invalid database reference")
+        case Some(db) => pipe(db.run(count(msg))) to sender()
       }
   }
 
