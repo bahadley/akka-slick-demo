@@ -15,8 +15,8 @@ class Industry extends Actor with ActorLogging {
   def delete(i: DeleteIndustry): DBIO[Int] =
     sqlu"delete from industry where in_id = ${i.in_id}"
 
-  def count(i: CountIndustry): DBIO[Option[Int]] =
-    sql"select count(*) from industry where in_id = ${i.in_id}".as[Option[Int]].head
+  def count(i: CountIndustry): DBIO[Int] =
+    sql"select count(*) from industry where in_id = ${i.in_id}".as[Int].head
 
   var db = None : Option[Database]
 

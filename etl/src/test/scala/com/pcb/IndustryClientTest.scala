@@ -17,38 +17,34 @@ class IndustryClientTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   val system = ActorSystem("pcb")
   val indRef = system.actorOf(Props[Industry])
 
+  val industry = Vector("AM", "Aerospace & Defense", "BM")
+
   "An Industry Actor" should "create an Industry correctly" in {
     val f1: Future[Int] = 
       ask(
         indRef, 
-        CreateIndustry("AM", "Aerospace & Defense", "BM")).mapTo[Int]
-    Await.result(f1, 2 seconds) should be (1)  // Number of tuples inserted.
+        CreateIndustry(industry(0), industry(1), industry(2))).mapTo[Int]
+    Await.result(f1, timeout.duration) should be (1)  // Number of tuples inserted.
 
-    val f2: Future[Option[Int]] = 
+    val f2: Future[Int] = 
       ask(
         indRef, 
-        CountIndustry("AM")).mapTo[Option[Int]]
-    Await.result(f2, 2 seconds) match {
-      case None => println("Failed")
-      case Some(count) => count should be (1)
-    }
+        CountIndustry(industry(0))).mapTo[Int]
+    Await.result(f2, timeout.duration) should be (1) 
   } 
 
   "An Industry Actor" should "delete an Industry correctly" in {
     val f1: Future[Int] = 
       ask(
         indRef, 
-        DeleteIndustry("AM")).mapTo[Int]
-    Await.result(f1, 2 seconds) should be (1)  // Number of tuples deleted.
+        DeleteIndustry(industry(0))).mapTo[Int]
+    Await.result(f1, timeout.duration) should be (1)  // Number of tuples deleted.
 
-    val f2: Future[Option[Int]] = 
+    val f2: Future[Int] = 
       ask(
         indRef, 
-        CountIndustry("AM")).mapTo[Option[Int]]
-    Await.result(f2, 2 seconds) match {
-      case None => println("Failed")
-      case Some(count) => count should be (0)
-    }
+        CountIndustry(industry(0))).mapTo[Int]
+    Await.result(f2, timeout.duration) should be (0) 
   } 
 
   override def afterAll() {
