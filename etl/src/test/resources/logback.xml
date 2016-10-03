@@ -7,8 +7,6 @@
         </encoder>
     </appender>
 
-    <logger name="scala.slick" level="INFO" />
-
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
