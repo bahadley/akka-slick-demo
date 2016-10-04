@@ -4,7 +4,6 @@ import akka.actor.{ActorSystem, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import com.pcb.messages._
-import com.pcb.data.{Industry, ReferenceData}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
@@ -15,7 +14,7 @@ class DataClientTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   implicit val timeout = Timeout(2 seconds)  // Timeout for futures.
 
   val system = ActorSystem("pcb")
-  val dataRef = system.actorOf(Props[ReferenceData])
+  val dataRef = system.actorOf(Props[TPCDIData])
 
   val industry = Vector("AM", "Aerospace & Defense", "BM")
 

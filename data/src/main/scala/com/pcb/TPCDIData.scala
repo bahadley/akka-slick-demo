@@ -1,4 +1,4 @@
-package com.pcb.data
+package com.pcb
 
 import akka.actor._
 import akka.event.LoggingReceive
@@ -7,7 +7,7 @@ import com.pcb.messages._
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class ReferenceData extends Actor with ActorLogging {
+class TPCDIData extends Actor with ActorLogging {
 
   import akka.actor.SupervisorStrategy._
 
