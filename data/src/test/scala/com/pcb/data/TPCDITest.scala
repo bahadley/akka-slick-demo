@@ -18,7 +18,7 @@ class TPCDIDataTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   val industry = Vector("AM", "Aerospace & Defense", "BM")
 
-  "An Industry Actor" should "create an Industry correctly" in {
+  "An Industry Actor" should "create an Industry tuple" in {
     val f1: Future[Int] = 
       ask(
         dataRef, 
@@ -32,7 +32,7 @@ class TPCDIDataTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     Await.result(f2, timeout.duration) should be (1) 
   } 
 
-  "An Industry Actor" should "delete an Industry correctly" in {
+  "An Industry Actor" should "delete an Industry tuple" in {
     val f1: Future[Int] = 
       ask(
         dataRef, 
