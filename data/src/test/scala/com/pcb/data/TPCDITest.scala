@@ -1,4 +1,4 @@
-package com.pcb
+package com.pcb.data
 
 import akka.actor.{ActorSystem, Props}
 import akka.pattern.ask
@@ -9,7 +9,7 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class DataClientTest extends FlatSpec with Matchers with BeforeAndAfterAll {
+class TPCDIDataTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   implicit val timeout = Timeout(2 seconds)  // Timeout for futures.
 
