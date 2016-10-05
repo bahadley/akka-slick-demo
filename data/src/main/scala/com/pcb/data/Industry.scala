@@ -7,7 +7,7 @@ import slick.driver.H2Driver.api._
 
 class Industry extends Actor with ActorLogging {
 
-  import scala.concurrent.ExecutionContext.Implicits.global
+  import context.dispatcher
 
   var db = None : Option[Database]
 
