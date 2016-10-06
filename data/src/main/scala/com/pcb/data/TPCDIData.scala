@@ -4,6 +4,7 @@ import akka.actor._
 import akka.event.LoggingReceive
 import akka.pattern.ask
 import com.pcb.messages._
+import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -29,4 +30,14 @@ class TPCDIData extends Actor with ActorLogging {
     case msg: CountIndustry =>
       indRef forward msg
   }
+}
+
+object Main extends App {
+
+  val log = LoggerFactory.getLogger(Main.getClass)
+
+  val system = ActorSystem("pcb-data")
+  val actor = system.actorOf(Props[TPCDIData], name = "tpcdidata")
+
+  log.info("Actor started; has path: [{}]", actor.path)
 }

@@ -1,14 +1,15 @@
-name := "pcb-etl"
+name := "pcb-data"
 
 version := "0.0.1"
 
 scalaVersion := "2.11.8"
 
-lazy val akkaVersion = "2.4.10"
+lazy val akkaVersion = "2.4.11"
 lazy val slickVersion = "3.1.1"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+  "com.typesafe.akka" %% "akka-remote" % akkaVersion,
   "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
   "com.typesafe.slick" %% "slick" % slickVersion,
   "com.typesafe.slick" % "slick-hikaricp_2.11" % slickVersion, 
