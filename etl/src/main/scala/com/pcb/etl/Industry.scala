@@ -2,10 +2,10 @@ package com.pcb.etl
 
 import akka.actor.{Actor, ActorLogging}
 import akka.camel.{CamelMessage, Consumer}
-import akka.pattern.{ask, pipe}
+import akka.pattern.ask
 import akka.util.Timeout
 import com.pcb.messages.CreateIndustry
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
