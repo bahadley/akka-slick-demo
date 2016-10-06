@@ -26,12 +26,8 @@ class Industry extends Actor with ActorLogging with Consumer {
     case msg: CamelMessage => {
       val lines = msg.bodyAs[String].split("\\r?\\n")
       for (line <- lines) {
-        val f: Future[Int] = 
-          ask(
-            tcpdidata, 
-            genMsg(line.split('|'))).mapTo[Int] 
-        f onFailure {
-          case e: Exception => println("Failed!")
+        ask(tcpdidata, genMsg(line.split('|'))) onFailure {
+          case _ => println("Failed!")
         }
       }
     }
