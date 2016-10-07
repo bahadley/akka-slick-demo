@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class TPCDIEtl extends Actor with ActorLogging {
+class EtlSuper extends Actor with ActorLogging {
 
   import akka.actor.SupervisorStrategy._
 
@@ -33,7 +33,7 @@ object Main extends App {
   val log = LoggerFactory.getLogger(Main.getClass)
 
   val system = ActorSystem("pcb-etl")
-  val actor = system.actorOf(Props[TPCDIEtl], name = "tpcdietl")
+  val actor = system.actorOf(Props[EtlSuper], name = "etl-super")
 
   log.info("Actor started; has path: [{}]", actor.path)
 }

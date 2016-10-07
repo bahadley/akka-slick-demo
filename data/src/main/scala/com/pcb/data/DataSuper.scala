@@ -18,7 +18,7 @@ class DataSuper extends Actor with ActorLogging {
       }
 
   override def preStart(): Unit = {
-    context.actorOf(Props[ReferenceData], "data-reference")
+    context.actorOf(Props[Reference], "data-reference")
   }
 
   def receive = {

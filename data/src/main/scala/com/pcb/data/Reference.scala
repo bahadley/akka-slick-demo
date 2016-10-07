@@ -5,7 +5,7 @@ import akka.pattern.pipe
 import com.pcb.messages._
 import slick.driver.H2Driver.api._
 
-class ReferenceData extends Actor with ActorLogging {
+class Reference extends Actor with ActorLogging {
 
   import context.dispatcher
 
