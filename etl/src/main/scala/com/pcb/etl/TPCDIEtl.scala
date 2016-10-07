@@ -20,7 +20,7 @@ class TPCDIEtl extends Actor with ActorLogging {
       }
 
   override def preStart(): Unit = {
-    context.actorOf(Props[Industry], "industry")
+    context.actorOf(Props[Industry], "etl-industry")
   }
 
   def receive = {
