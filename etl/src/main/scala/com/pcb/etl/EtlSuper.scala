@@ -21,6 +21,9 @@ class EtlSuper extends Actor with ActorLogging {
 
   override def preStart(): Unit = {
     context.actorOf(Props[Industry], "etl-industry")
+    context.actorOf(Props[StatusType], "etl-statusType")
+    context.actorOf(Props[TaxRate], "etl-taxRate")
+    context.actorOf(Props[TradeType], "etl-tradeType")
   }
 
   def receive = {
