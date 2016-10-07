@@ -2,10 +2,10 @@ package com.pcb.data
 
 import akka.actor.{Actor, ActorLogging}
 import akka.pattern.pipe
-import com.pcb.messages.{CountIndustry, CreateIndustry, DeleteIndustry}
+import com.pcb.messages._
 import slick.driver.H2Driver.api._
 
-class Industry extends Actor with ActorLogging {
+class ReferenceData extends Actor with ActorLogging {
 
   import context.dispatcher
 

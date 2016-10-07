@@ -18,7 +18,7 @@ class Industry extends Actor with ActorLogging with Consumer {
 
   def endpointUri = s"file:data/input?include=${fileName}&delete=true"
 
-  val path = "akka.tcp://pcb-data@127.0.0.1:2552/user/tpcdidata/data-industry"
+  val path = "akka.tcp://pcb-data@127.0.0.1:2552/user/data-super/data-reference"
   val tcpdidata = context.actorSelection(path)
 
   def receive = {
