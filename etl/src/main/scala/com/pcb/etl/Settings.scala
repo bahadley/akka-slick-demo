@@ -5,6 +5,7 @@ import com.typesafe.config.Config
      
 class SettingsImpl(config: Config) extends Extension {
   val dataPath: String = config.getString("etl.data.path")
+  val directory: String = config.getString("etl.sources.directory")
   val industryFile: String = config.getString("etl.sources.industry")
 }
 
