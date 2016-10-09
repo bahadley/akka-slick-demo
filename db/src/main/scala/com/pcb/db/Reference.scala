@@ -59,20 +59,25 @@ class Reference extends Actor with ActorLogging {
   }
 
   def insertIn(in: CreateIndustry): DBIO[Int] =
-    sqlu"insert into industry values (${in.in_id}, ${in.in_name}, ${in.in_sc_id})"
+    sqlu"""insert into industry (in_id, in_name, in_sc_id)
+      values (${in.in_id}, ${in.in_name}, ${in.in_sc_id})"""
 
   def deleteIn(in: DeleteIndustry): DBIO[Int] =
     sqlu"delete from industry where in_id = ${in.in_id}"
 
   def countIn(in: CountIndustry): DBIO[Int] =
-    sql"select count(*) from industry where in_id = ${in.in_id}".as[Int].head
+    sql"""select count(*) from industry 
+      where in_id = ${in.in_id}""".as[Int].head
 
   def insertSt(st: CreateStatusType): DBIO[Int] =
-    sqlu"insert into statustype values (${st.st_id}, ${st.st_name})"
+    sqlu"""insert into statustype (st_id, st_name)
+      values (${st.st_id}, ${st.st_name})"""
 
   def insertTx(tx: CreateTaxRate): DBIO[Int] =
-    sqlu"insert into taxrate values (${tx.tx_id}, ${tx.tx_name}, ${tx.tx_rate})"
+    sqlu"""insert into taxrate (tx_id, tx_name, tx_rate)
+      values (${tx.tx_id}, ${tx.tx_name}, ${tx.tx_rate})"""
 
   def insertTt(tt: CreateTradeType): DBIO[Int] =
-    sqlu"insert into tradetype values (${tt.tt_id}, ${tt.tt_name}, ${tt.tt_is_sell}, ${tt.tt_is_market})"
+    sqlu"""insert into tradetype (tt_id, tt_name, tt_is_sell, tt_is_mrkt)
+      values (${tt.tt_id}, ${tt.tt_name}, ${tt.tt_is_sell}, ${tt.tt_is_market})"""
 }
