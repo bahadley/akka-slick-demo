@@ -1,4 +1,4 @@
-package com.pcb.data
+package com.pcb.db
 
 import akka.actor.{Actor, ActorLogging}
 import akka.pattern.pipe

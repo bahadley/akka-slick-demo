@@ -1,4 +1,4 @@
-package com.pcb.data
+package com.pcb.db
 
 import akka.actor._
 import akka.event.LoggingReceive
@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class DataSuper extends Actor with ActorLogging {
+class DBSuper extends Actor with ActorLogging {
 
   override val supervisorStrategy = 
     OneForOneStrategy(
@@ -18,7 +18,7 @@ class DataSuper extends Actor with ActorLogging {
       }
 
   override def preStart(): Unit = {
-    context.actorOf(Props[Reference], "data-reference")
+    context.actorOf(Props[Reference], "db-reference")
   }
 
   def receive = {
@@ -30,8 +30,8 @@ object Main extends App {
 
   val log = LoggerFactory.getLogger(Main.getClass)
 
-  val system = ActorSystem("pcb-data")
-  val actor = system.actorOf(Props[DataSuper], name = "data-super")
+  val system = ActorSystem("pcb-db")
+  val actor = system.actorOf(Props[DBSuper], name = "db-super")
 
   log.info("Actor started; has path: [{}]", actor.path)
 }

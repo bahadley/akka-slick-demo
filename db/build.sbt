@@ -1,4 +1,4 @@
-name := "pcb-data"
+name := "pcb-db"
 
 version := "0.0.1"
 
