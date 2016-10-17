@@ -14,11 +14,14 @@ class TaxRate extends Actor with ActorLogging with Consumer {
 
   implicit val timeout = Timeout(2 seconds)
 
-  val settings = Settings(context.system)
+  val config = context.system.settings.config
 
-  def endpointUri = s"file:${settings.directory}?include=${settings.taxRateFile}&delete=true"
+  val directory = config.getString("etl.sources.directory")
+  val file = config.getString("etl.sources.taxRate")
+  def endpointUri = s"file:${directory}?include=${file}&delete=true"
 
-  val data = context.actorSelection(settings.dataPath)
+  val dbPath = config.getString("etl.db.path")
+  val data = context.actorSelection(dbPath)
 
   val NEW_LINE = "\\r?\\n"
   val DELIM = '|'
