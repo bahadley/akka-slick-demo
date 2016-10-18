@@ -1,1 +1,1 @@
-# ocb
+# Opinionated Circuit Breaker (ocb)
