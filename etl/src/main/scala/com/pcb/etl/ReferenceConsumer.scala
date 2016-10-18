@@ -42,24 +42,24 @@ trait ReferenceData {
 
 object Industry extends ReferenceData {
   override val source = "industry"
-  override def genMsg(arr:Array[String]) = 
-    CreateIndustry(arr(0), arr(1), arr(2))
+  override def genMsg(a:Array[String]) = 
+    CreateIndustry(a(0), a(1), a(2))
 }
 
 object StatusType extends ReferenceData {
   override val source = "statusType"
-  override def genMsg(arr:Array[String]) = 
-    CreateStatusType(arr(0), arr(1))
+  override def genMsg(a:Array[String]) = 
+    CreateStatusType(a(0), a(1))
 }
 
 object TaxRate extends ReferenceData {
   override val source = "taxRate"
-  override def genMsg(arr:Array[String]) = 
-    CreateTaxRate(arr(0), arr(1), arr(2).toDouble)
+  override def genMsg(a:Array[String]) = 
+    CreateTaxRate(a(0), a(1), a(2).toDouble)
 }
 
 object TradeType extends ReferenceData {
   override val source = "tradeType"
-  override def genMsg(arr:Array[String]) = 
-    CreateTradeType(arr(0), arr(1), arr(2).toShort, arr(3).toShort)
+  override def genMsg(a:Array[String]) = 
+    CreateTradeType(a(0), a(1), a(2).toShort, a(3).toShort)
 }
