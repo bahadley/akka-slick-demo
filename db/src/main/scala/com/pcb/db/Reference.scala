@@ -1,16 +1,16 @@
 package com.pcb.db
 
 import akka.actor.{Actor, ActorLogging}
-import akka.pattern.pipe
+import akka.pattern.{CircuitBreaker, pipe}
 import com.pcb.messages._
+import scala.concurrent.duration._
+import scala.language.postfixOps
 import slick.driver.H2Driver.api._
 
 class Reference extends Actor with ActorLogging {
-
   import context.dispatcher
 
   var db = None : Option[Database]
-  val ERR_MSG_DB = "Connection pool is uninitialized" 
 
   override def preStart(): Unit = {
     db = Some(Database.forConfig("tpcdi"))
@@ -25,36 +25,55 @@ class Reference extends Actor with ActorLogging {
     super.postStop()
   }
 
+  val bkr =
+    new CircuitBreaker(
+      context.system.scheduler,
+      maxFailures = 5,
+      callTimeout = 2.seconds,
+      resetTimeout = 1.minute).onOpen(breakerOpen())
+
   def receive = {
     case msg: CreateIndustry =>
       db match {
-        case None => throw new NullPointerException(ERR_MSG_DB) 
-        case Some(db) => pipe(db.run(insertIn(msg))) to sender()
+        case None => 
+          throw new NullPointerException(ERR_MSG_DB) 
+        case Some(db) => 
+          bkr.withCircuitBreaker(db.run(insertIn(msg))) pipeTo sender()
       }
     case msg: CreateStatusType =>
       db match {
-        case None => throw new NullPointerException(ERR_MSG_DB) 
-        case Some(db) => pipe(db.run(insertSt(msg))) to sender()
+        case None => 
+          throw new NullPointerException(ERR_MSG_DB) 
+        case Some(db) => 
+          bkr.withCircuitBreaker(db.run(insertSt(msg))) pipeTo sender()
       }
     case msg: CreateTaxRate =>
       db match {
-        case None => throw new NullPointerException(ERR_MSG_DB) 
-        case Some(db) => pipe(db.run(insertTx(msg))) to sender()
+        case None => 
+          throw new NullPointerException(ERR_MSG_DB) 
+        case Some(db) => 
+          bkr.withCircuitBreaker(db.run(insertTx(msg))) pipeTo sender()
       }
     case msg: CreateTradeType =>
       db match {
-        case None => throw new NullPointerException(ERR_MSG_DB) 
-        case Some(db) => pipe(db.run(insertTt(msg))) to sender()
+        case None => 
+          throw new NullPointerException(ERR_MSG_DB) 
+        case Some(db) => 
+          bkr.withCircuitBreaker(db.run(insertTt(msg))) pipeTo sender()
       }
     case msg: DeleteIndustry =>
       db match {
-        case None => throw new NullPointerException(ERR_MSG_DB)
-        case Some(db) => pipe(db.run(deleteIn(msg))) to sender()
+        case None => 
+          throw new NullPointerException(ERR_MSG_DB)
+        case Some(db) => 
+          bkr.withCircuitBreaker(db.run(deleteIn(msg))) pipeTo sender()
       }
     case msg: CountIndustry =>
       db match {
-        case None => throw new NullPointerException(ERR_MSG_DB)
-        case Some(db) => pipe(db.run(countIn(msg))) to sender()
+        case None => 
+          throw new NullPointerException(ERR_MSG_DB)
+        case Some(db) => 
+          bkr.withCircuitBreaker(db.run(countIn(msg))) pipeTo sender()
       }
   }
 
@@ -80,4 +99,9 @@ class Reference extends Actor with ActorLogging {
   def insertTt(tt: CreateTradeType): DBIO[Int] =
     sqlu"""insert into tradetype (tt_id, tt_name, tt_is_sell, tt_is_mrkt)
       values (${tt.tt_id}, ${tt.tt_name}, ${tt.tt_is_sell}, ${tt.tt_is_market})"""
+
+  def breakerOpen(): Unit =
+    log.warning("CircuitBreaker opened");
+
+  val ERR_MSG_DB = "Connection pool is uninitialized" 
 }
