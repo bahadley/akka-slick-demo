@@ -1,7 +1,7 @@
 package com.pcb.db
 
 import akka.actor.{Actor, ActorLogging}
-import akka.pattern.{CircuitBreaker, pipe}
+import akka.pattern.pipe
 import com.pcb.messages._
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -25,12 +25,7 @@ class Reference extends Actor with ActorLogging {
     super.postStop()
   }
 
-  val bkr =
-    new CircuitBreaker(
-      context.system.scheduler,
-      maxFailures = 5,
-      callTimeout = 2.seconds,
-      resetTimeout = 1.minute).onOpen(breakerOpen())
+  val bkr = new Ocb(context.system.scheduler)
 
   def receive = {
     case msg: CreateIndustry =>
@@ -99,9 +94,6 @@ class Reference extends Actor with ActorLogging {
   def insertTt(tt: CreateTradeType): DBIO[Int] =
     sqlu"""insert into tradetype (tt_id, tt_name, tt_is_sell, tt_is_mrkt)
       values (${tt.tt_id}, ${tt.tt_name}, ${tt.tt_is_sell}, ${tt.tt_is_market})"""
-
-  def breakerOpen(): Unit =
-    log.warning("CircuitBreaker opened");
 
   val ERR_MSG_DB = "Connection pool is uninitialized" 
 }
