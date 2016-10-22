@@ -25,7 +25,7 @@ class Reference extends Actor with ActorLogging {
     super.postStop()
   }
 
-  val bkr = new Ocb(context.system.scheduler)
+  val bkr = new Ocb(context.system.scheduler, 5, 2, 1)
 
   def receive = {
     case msg: CreateIndustry =>

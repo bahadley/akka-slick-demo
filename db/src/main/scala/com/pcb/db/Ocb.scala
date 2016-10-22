@@ -6,14 +6,31 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
-class Ocb (scheduler: Scheduler)(implicit executor: ExecutionContext) {
+class Ocb (
+  scheduler: Scheduler, 
+  var maxFailures: Int, 
+  callTimeout: Int, 
+  var resetTimeout: Int)(implicit executor: ExecutionContext) {
 
-  val bkr =
-    new CircuitBreaker(
+  private var cb = newCircuitBreaker
+
+  private def newCircuitBreaker: CircuitBreaker = {
+     new CircuitBreaker(
       scheduler,
-      maxFailures = 5,
-      callTimeout = 2.seconds,
-      resetTimeout = 1.minute)
+      maxFailures = maxFailures,
+      callTimeout = callTimeout.seconds,
+      resetTimeout = resetTimeout.minute)
+  }
 
-  def withCircuitBreaker[T](body: => Future[T]): Future[T] = bkr.withCircuitBreaker(body)
+  def reconfigure(mf: Int, rt: Int): Boolean = {
+    maxFailures = mf
+    resetTimeout = rt
+
+    if(cb.isClosed)
+      cb = newCircuitBreaker
+   
+    cb.isClosed 
+  }  
+
+  def withCircuitBreaker[T](body: => Future[T]): Future[T] = cb.withCircuitBreaker(body)
 }
