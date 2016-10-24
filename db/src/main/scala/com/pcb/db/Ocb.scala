@@ -23,14 +23,17 @@ class Ocb (
   }
 
   def reconfigure(mf: Int, rt: Int): Boolean = {
+    var reconfigured = false
     maxFailures = mf
     resetTimeout = rt
 
-    if(cb.isClosed)
+    if(cb.isClosed) {
       cb = newCircuitBreaker
+      reconfigured = true
+    }
    
-    cb.isClosed 
+    reconfigured 
   }  
 
-  def withCircuitBreaker[T](body: => Future[T]): Future[T] = cb.withCircuitBreaker(body)
+  def guard[T](body: => Future[T]): Future[T] = cb.withCircuitBreaker(body)
 }

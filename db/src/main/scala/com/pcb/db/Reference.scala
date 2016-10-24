@@ -12,6 +12,12 @@ class Reference extends Actor with ActorLogging {
 
   var db = None : Option[Database]
 
+  val ocb = new Ocb(
+    scheduler = context.system.scheduler, 
+    maxFailures = 5, 
+    callTimeout = 2, 
+    resetTimeout = 1)
+
   override def preStart(): Unit = {
     db = Some(Database.forConfig("tpcdi"))
     super.preStart()
@@ -25,50 +31,48 @@ class Reference extends Actor with ActorLogging {
     super.postStop()
   }
 
-  val bkr = new Ocb(context.system.scheduler, 5, 2, 1)
-
   def receive = {
     case msg: CreateIndustry =>
       db match {
         case None => 
           throw new NullPointerException(ERR_MSG_DB) 
         case Some(db) => 
-          bkr.withCircuitBreaker(db.run(insertIn(msg))) pipeTo sender()
+          ocb.guard(db.run(insertIn(msg))) pipeTo sender()
       }
     case msg: CreateStatusType =>
       db match {
         case None => 
           throw new NullPointerException(ERR_MSG_DB) 
         case Some(db) => 
-          bkr.withCircuitBreaker(db.run(insertSt(msg))) pipeTo sender()
+          ocb.guard(db.run(insertSt(msg))) pipeTo sender()
       }
     case msg: CreateTaxRate =>
       db match {
         case None => 
           throw new NullPointerException(ERR_MSG_DB) 
         case Some(db) => 
-          bkr.withCircuitBreaker(db.run(insertTx(msg))) pipeTo sender()
+          ocb.guard(db.run(insertTx(msg))) pipeTo sender()
       }
     case msg: CreateTradeType =>
       db match {
         case None => 
           throw new NullPointerException(ERR_MSG_DB) 
         case Some(db) => 
-          bkr.withCircuitBreaker(db.run(insertTt(msg))) pipeTo sender()
+          ocb.guard(db.run(insertTt(msg))) pipeTo sender()
       }
     case msg: DeleteIndustry =>
       db match {
         case None => 
           throw new NullPointerException(ERR_MSG_DB)
         case Some(db) => 
-          bkr.withCircuitBreaker(db.run(deleteIn(msg))) pipeTo sender()
+          ocb.guard(db.run(deleteIn(msg))) pipeTo sender()
       }
     case msg: CountIndustry =>
       db match {
         case None => 
           throw new NullPointerException(ERR_MSG_DB)
         case Some(db) => 
-          bkr.withCircuitBreaker(db.run(countIn(msg))) pipeTo sender()
+          ocb.guard(db.run(countIn(msg))) pipeTo sender()
       }
   }
 
