@@ -1,4 +1,2 @@
-# Opinionated Circuit Breaker (ocb)
-
-Work in progress...
+# Demo of Akka and Slick integration with a H2 database 
 
